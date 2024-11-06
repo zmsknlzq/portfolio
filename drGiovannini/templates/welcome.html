@@ -1,0 +1,16 @@
+{% extends "dr_giovannini.html" %}
+{% block avatar %}
+<img id="avatar" src="/static/gothic-removebg.png" alt="Doctor Stefano Giovannini" class="from_left_and_top_welcome">
+{% endblock %}
+{% block content %}
+<div id="viewer" class="from_left_and_top_welcome_v">
+    <h2 class="red-rose">Welcome!</h2>
+    <h4 class="red-rose larger-font">What would you like to know about?</h4>
+    <ul class="red-rose-light no_padding larger-font">
+        <li class="small_padding"><a href="/bio">Bio</a></li>
+        <li class="small_padding"><a href="/services">Services</a></li>
+        <li class="small_padding"><a href="/email">Email</a></li>
+        <li class="small_padding"><a href="/pedone">Pedone Art</a></li>
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,385 @@
+© 2024 Stefano Giovannini - All rights reserved
+
+23-10-2024
+
+Starting out my website project.
+
+Since Dr Angela Yu suggests to use Flask for small projects, whereas Django is meant for commercial usage,
+I am using the Flask framework with Python to build a website that I can use as my business card, blog etc.
+
+Indeed, Flask is a minimalistic full-stack framework dependent on (A) Werkzeug, (B) Jinja, and (C) Click.
+(A) Werkzeug (https://werkzeug.palletsprojects.com/en/3.0.x/) is a comprehensive WSGI web-application library.
+    As for WSGI: "WSGI is the Web Server Gateway Interface. It is a specification that describes how a web server
+    communicates with web applications, and how web applications can be chained together to process one request."
+    (https://wsgi.readthedocs.io/en/latest/what.html)
+    As explained in https://peps.python.org/pep-3333/#original-rationale-and-goals-from-pep-333, WSGI is meant to
+    allow all web applications developed in Python to run on any Python-supporting server, so that Python
+    web-application developers are free from any ties to specific servers for their apps.
+    As explained at https://stackoverflow.com/a/56267526/12002711, Werkzeug provides utilities ("things like parsing
+    headers, sending and receiving cookies, providing access to form data, generating redirects, generating error pages
+    when there's an exception, even providing an interactive debugger that runs in the browser") to build
+    WSGI-compliant applications.
+(B) "Jinja is a fast, expressive, extensible templating engine. Special placeholders in the template allow writing code
+    similar to Python syntax. Then the template is passed data to render the final document."
+    (https://jinja.palletsprojects.com/en/3.1.x/)
+    A template engine allows you to write code-like syntax for markup rendering, so to speed up the design of webpages.
+(C) "Click is a framework for writing command line applications. It provides the flask command and allows adding custom
+    management commands."
+    (https://flask.palletsprojects.com/en/1.1.x/installation/#:~:text=Click%20is%20a%20framework%20for,allows%20adding%20custom%20management%20commands.)
+
+I will start by having a look at Flask's documentation at https://flask.palletsprojects.com/en/3.0.x/,
+according to which, the next steps will be:
+    1) installation https://flask.palletsprojects.com/en/3.0.x/installation/
+    2) quickstart https://flask.palletsprojects.com/en/3.0.x/quickstart/
+    3) tutorial https://flask.palletsprojects.com/en/3.0.x/tutorial/ ("to create a small but complete application")
+    4) common patterns' study https://flask.palletsprojects.com/en/3.0.x/patterns/
+    5) optional customization of parts of Flask
+
+1) INSTALLATION (Flask supports Python 3.8 and newer.)
+
+    "These distributions will be installed automatically when installing Flask.
+        Werkzeug implements WSGI, the standard Python interface between applications and servers.
+        Jinja is a template language that renders the pages your application serves.
+        MarkupSafe comes with Jinja. It escapes untrusted input when rendering templates to avoid injection attacks.
+        ItsDangerous securely signs data to ensure its integrity. This is used to protect Flask’s session cookie.
+        Click is a framework for writing command line applications. It provides the flask command and allows adding
+            custom management commands.
+        Blinker provides support for Signals.
+
+        Optional dependencies
+            These distributions will not be installed automatically. Flask will detect and use them if you install them.
+            python-dotenv enables support for Environment Variables From dotenv when running flask commands.
+            Watchdog provides a faster, more efficient reloader for the development server."
+
+    (https://flask.palletsprojects.com/en/3.0.x/installation/)
+
+    To install Flask, you'd need a virtual environment where to put it. Here I don't need to follow the docs about the
+    related cmd line commands because PyCharm automatically lets me create a venv for a new project, and also it is not
+    necessary to use the terminal for installing packages via pip, since they can be added in many cases by simply
+    clicking on the red line when importing, or anyway by adding them to the Python interpreter from settings, both of
+    which are easier then using the terminal.
+
+2) QUICKSTART
+
+    Any application developed with Flask, is an instance of the Flask class. This is why at the beginning of the main
+    file it is necessary to import Flask from flask.
+
+    The application must have a name where flask can find the relevant files, and this is why an instance of flask
+    needs to be initialized by passing the application name as its argument, e.g., app = Flask(__name__)
+
+    The next step is to add a route as a "decorator" to a specific function, so to assign that function (which is
+    something we want our app to do when that route is reached) to that route.
+        What is a "decorator"?
+        "In Python, a decorator is a design pattern that allows you to modify the functionality of a function by wrapping
+        it in another function. The outer function is called the decorator, which takes the original function as an argument
+        and returns a modified version of it."
+        (https://www.programiz.com/python-programming/decorator)
+        In other words, a "decorator" is merely a callable that takes another non-built-in callable as its argument and
+        modifies it by using an inner (or "nested") callable, which is returned by the outer callable. This means that
+        without any special syntax you need to assign the decorator to a variable to store the inner callable and then call
+        it, e.g. with functions (classes can also be used as decorators for functions, see
+        https://builtin.com/software-engineering-perspectives/python-class-decorator):
+            def function_to_decorate():
+                # anything here
+            def decorator(func):
+                def modifier():
+                    # anything here
+                    func()
+                return modifier
+            decorate = decorator(function_to_decorate)
+            decorate()
+        Of course, the last two lines can be reduced to one as decorator(function_to_decorate)() if no storage is needed.
+        However, Python offers a shorter way to express the same meaning, as it is possible to implement decoration by
+        leveraging the special character @. The way you use this is by prefixing it to the name of the decorator one line
+        above the function to be decorated. The decoration is permanent from that line on. The above example would become:
+            def decorator(func):
+                def modifier():
+                    # anything here
+                    func()
+                return modifier
+            @decorator
+            def function_to_decorate():
+                ...
+        One can also chain decorators, following the same logic of using functions as arguments for other functions, so
+        something like
+            def necessary_function():
+                # anything here
+            storage = nice_to_have_function(useful_function(necessary_function()))
+        would be also writable as:
+            @nice_to_have_function
+            @useful_function
+            def necessary_function():
+                # anything here
+    So in case we wanted to call a function whenever the root path of the website router is hit, we may write
+    something like:
+        @app.route('/')
+        def home_function():
+            # anything here
+    This is typically used for rendering of the webpage at the specified path, e.g.,:
+        @app.route('/who')
+        def display_members():
+            return # here goes the string containing the html to return (e.g., "<h1>Who we are</h1>")
+    NB:
+        (1) flask escapes html by default by using the Jinja templating engine, to prevent injection attacks. However,
+            it allows for import of unescaped html by using the Markup class. For details, see:
+                https://flask.palletsprojects.com/en/stable/quickstart/#rendering-templates
+        (2) see https://flask.palletsprojects.com/en/stable/quickstart/#variable-rules on how to implement dynamic URLs.
+            (2/B) "To build a URL to a specific function, use the url_for() function. It accepts the name of the
+                    function as its first argument and any number of keyword arguments, each corresponding to a variable
+                    part of the URL rule. Unknown variable parts are appended to the URL as query parameters."
+                    E.g. at https://flask.palletsprojects.com/en/stable/quickstart/#url-building
+        (3) on trailing slashes at URL end, see:
+                https://flask.palletsprojects.com/en/stable/quickstart/#unique-urls-redirection-behavior
+    The main file must be saved as a Python file with a ".py" extension, e.g., my_app.py
+    For development, the application is can be run on flask's built-in server http://127.0.0.1:5000 by the command
+        flask --app my_app run
+    See these instructions for production: https://flask.palletsprojects.com/en/stable/deploying
+    NB:
+        (1) if the main file is named app.py or wsgi.py, there is no need to enter the --app command.
+        (2) "In debug mode, the flask run command will enable the interactive debugger and the reloader by default,
+            and make errors easier to see and debug. To enable debug mode, use the --debug option."
+            (2/B) About the reloader:
+                      https://flask.palletsprojects.com/en/stable/cli/#watch-and-ignore-files-with-the-reloader
+        (3) In PyCharm, it is also possible to use a built-in configuration tool for flask:
+                https://flask.palletsprojects.com/en/stable/cli/#pycharm-integration
+    Apart from being run from command line, the application can be started from within the script of the main file as
+    follows:
+        from flask import Flask
+        app = Flask(__name__)
+        if __name__ == '__main__':
+            app.run() # even better would be app.run(debug=True) to enable debug mode
+        (
+            NB: the name of a main file in Python is '__main__' because this is assigned by default by the interpreter,
+            which means that the app in the code chunk above will always launch, except if the main.py module is
+            imported by another module, which shouldn't ever happen. For more details:
+            https://stackoverflow.com/a/419185/12002711
+        )
+    Since this is obviously way more convenient, I will do as such. Furthermore, since I am used to use the
+    python-dotenv package to load private environment variables from an .env file, I am referring to these instructions
+    for flask:
+        https://flask.palletsprojects.com/en/stable/cli/#environment-variables-from-dotenv
+    The app.route() decorator supports optional HTTP method arguments, e.g.:
+        from flask import request
+        @app.route('/login', methods=['GET', 'POST'])
+        def login():
+            if request.method == 'POST':
+                return do_login()
+            else:
+                return show_login_form()
+    NB: request is an object whose methods can be accessed as documented at
+            https://flask.palletsprojects.com/en/stable/quickstart/#the-request-object
+        and
+            https://flask.palletsprojects.com/en/stable/api/#flask.Request
+    However, flask also provides shortcut decorators for HTTP methods, e.g.:
+        @app.get('/login')
+        def login_get():
+            return show_login_form
+        @app.post('/login')
+        def login_post():
+            return do_login()
+    To render a template you add the route/s as decorator/s to a function returning the desired template. If you need to
+    pass variables to the template, you add them as arguments of the function. E.g.:
+        from flask import render_template
+        @app.route('/')
+        @app.route('/login')
+        def footer_template(date):
+            return render_template('footer.html', today=date)
+    NB: "Flask will look for templates in the templates folder. So if your application is a module, this folder is next
+        to that module, if it’s a package it’s actually inside your package"
+        (https://flask.palletsprojects.com/en/stable/quickstart/#rendering-templates)
+    The default templating engine used by flask is Jinja, which allows for three kinds of syntax:
+        {% statement %}
+        {{ expression }}
+        {# comment #}
+    E.g., to create a <ul> of values from a same key for each of the dictionaries in dict_list:
+        <ul>
+            {% for d in dict_list %}
+                <li>{{ d["a_key"] }}</li>
+            {% endfor %}
+        </ul>
+    An example with an if/else block (from https://flask.palletsprojects.com/en/stable/quickstart/#rendering-templates):
+        {% if person %}
+            <h1>Hello {{ person }}!</h1>
+        {% else %}
+            <h1>Hello, World!</h1>
+        {% endif %}
+    NB: in both cases an ending statement is needed to close the block (endfor, endif).
+    A page built with a Jinja template can be inherited by other children, so to keep layout consistent throughout the
+    website without having to rewrite it for each page. For details, see:
+        https://flask.palletsprojects.com/en/stable/patterns/templateinheritance
+    For details about the following, visit the corresponding URLs:
+        file uploads
+            https://flask.palletsprojects.com/en/stable/quickstart/#file-uploads
+        cookies
+            https://flask.palletsprojects.com/en/stable/quickstart/#cookies
+        sessions
+            https://flask.palletsprojects.com/en/stable/quickstart/#sessions
+        redirects and errors
+            https://flask.palletsprojects.com/en/stable/quickstart/#redirects-and-errors
+        responses
+            https://flask.palletsprojects.com/en/stable/quickstart/#about-responses
+        API with JSON
+            https://flask.palletsprojects.com/en/stable/quickstart/#apis-with-json
+        message flashing
+            https://flask.palletsprojects.com/en/stable/quickstart/#message-flashing
+        logging and error handling
+            https://flask.palletsprojects.com/en/stable/quickstart/#logging
+            https://flask.palletsprojects.com/en/stable/api/#flask.Flask.logger
+            https://docs.python.org/3/library/logging.html#module-logging
+            https://flask.palletsprojects.com/en/stable/errorhandling/
+        hooking in WSGI middleware
+            https://flask.palletsprojects.com/en/stable/quickstart/#hooking-in-wsgi-middleware
+        flask extensions
+            https://flask.palletsprojects.com/en/stable/quickstart/#using-flask-extensions
+        deploying to a web server
+            https://flask.palletsprojects.com/en/stable/quickstart/#deploying-to-a-web-server
+    NB: in the above documentation, you will come across the wording "view function". In Python, a "view" function is a
+        function whose input is a web request and output a web response.
+
+    25-10-2024
+    Now that I went through the basic documentation, I will skip my intended step 3, i.e., flask's tutorial
+    (https://flask.palletsprojects.com/en/stable/tutorial/), because the model app it lets you build is irrelevant for
+    my goal at this stage. I might go back to it later if needed. As for step 4, i.e., studying common patterns, this is
+    more something one needs to do while developing the web application, rather than before starting, since it is
+    difficult to say which ones will be relevant, if any. So far, the two patterns that I think will come in handy are
+    message flashing and template inheritance. It is certainly possible that I am wrong. Finally, I am not in need for
+    flask customization at the moment; therefore, I am moving on to Dr Angela Yu's tutorial on Udemy, to see if it can
+    be a simpler and more effective starter for my project, i.e., a personal website to be used as a business card and
+    possibly a blog.
+
+    27-10-2024
+    Indeed, Dr Angela Yu's course provides exactly the same example I was thinking about, i.e., building a
+    business-card website "drgiovannini.com" to present oneself with professional title and contacts. It is very useful
+    that Dr Angela Yu points to a website https://html5up.net/ that allows to download fully-customizable webpage
+    templates. Therefore, I will download one of those and customize it for my website. Next step is to choose the
+    proper template, and build the website. As per flask requirements, static files such as CSS stylesheets and images
+    must be stored in a subfolder named "static", while HTML templates in a subfolder named "templates". Routes render
+    HTML templates as mentioned above, i.e., by leveraging Flask's method "render_template".
+
+    28-10-2024
+    I decided to organize my website in four sub-routes of the home route (drgiovannini.com/).
+    The idea is to keep the same exact template for whatever route giving the impression to be serving always the same
+    page, while only changing a few lines of textual content, in the form of a list or paragraph within a div, based on
+    the selected route. The permanent structure (template) has a navbar at the top, a div in the middle, and two
+    headings at the bottom of the page, all of which are visible at once, to avoid the annoying need to scroll down.
+    The navbar contains the four internal links to the sub-routes, and one external link to my LinkedIn profile.
+    The four sub-routes are /bio, /services, /email, and /pedone.
+    The central div contains my face as an invariable piece of content on the left, while at the right of the img the
+    "#viewer" div contains a h2 heading and either a ul (on home route) or a p (on sub-routes). On home, the h2 says
+    "Welcome!", whereas the ul contains the links to the sub-routes, like the navbar.
+    The h1 heading below the central div states my name, while the h4 heading below it, which is also the element at the
+    bottom of the view, is the copyright.
+    The next step is to prepare HTML contents to substitute the #viewer div's h2 and content (ul or p) for each route.
+    (See: https://jinja.palletsprojects.com/en/stable/templates/#base-template)
+    So the next step is to move the content of the #viewer div of the home-page from the main file "dr_giovannini.html"
+    to a child "welcome.html".
+    NB: "child" is used here as in the Jinja docs.
+
+    29-10-2024
+    Templating worked as expected for the home page rendering. Next I am implementing the /bio route with the same
+    logic. Since textual content is considerably longer, I am omitting the h4 in the #viewer div. I am using "Who I am"
+    as the h2, and the bio I usually send when applying for jobs as the bio. I am storing this in a bio.html child of
+    dr_giovannini.html, to be rendered upon hitting of the /bio route.
+
+    30-10-2024
+    Templating worked as expected for the /bio route. Next I am implementing the /services route to list the
+    professional services that I offer. It will be a simple ul, with each li devoted to one professional sector among
+    "translation", "teaching", and "software development". Therefore, I am recycling the structure of the "welcome.html"
+    template, although this one will have more text.
+    I decided to change the avatar's position to fixed and position it according to each route's contents, to prevent
+    empty spaces from looking too large. This means that I need to pass the parameter "from_top" and "from_left" to each
+    route to dynamically set the avatar's class, one among those setting the proper position on that specific route, as
+    proven by previous testing, which will be my next task.
+
+    31-10-2024
+    I realized how my idea from yesterday about passing class parameters was nonsense, since I can simply template
+    the entire img element with a different class referred to in each route's HTML, similar to the templates of the rest
+    of the code. To do so, I added a templating block called "avatar" before my templating block called "content". I
+    also realized how to properly arrange the avatar image and #viewer div on each route's rendered page, it is better
+    to use a fixed positioning for both, with changing left and top distances based on the page's contents. I therefore
+    arranged not only different classes establishing the left and top distances (in vw and vh respectively) for the
+    #avatar image but also for the #viewer div. To be able to overlap the #avatar image to the #viewer div, I then
+    added a z-index of 888 to the #avatar (whereas the only other element with a set z-index - 999 - is the navbar).
+    These tweaks allowed me to nicely and easily position #avatar and #viewer on the following routes: /, /bio, and
+    /services.
+    Next I am implementing the /email route, where I am showing my email as an image containing my email address with
+    "@" substituted by " [at] ".
+    I had to add a height and overflow:auto to #viewer to automatically produce a scrollbar when it overflows
+    vertically.
+    Implementing the /email route was easy.
+    Next I am implementing the /pedone route, where I explain what Pedone is, while linking to its website.
+    I am also embedding the YT video of our last exhibition, as well as linking to the various sections within of the
+    website. Since I want to keep the page view as compact as possible, without need for scrolling down on laptop,
+    I am putting the embedded video in a fixed-position div under the #avatar img, while using the #viewer div for
+    text and links only. Therefore, the structure of the HTML rendered by the /pedone route will be similar to that of
+    the /bio route, except for the addition of a fixed position div embedding the YT video.
+
+    02-11-2024
+    I completed the website, at least in its basic version. It has no JavaScript at all, and works well as a
+    business-card website, as intended. I disabled right click and text selection throughout. Next, I will deploy it.
+    Prior to that, though, although having no JavaScript nor PHP nor any database nor authentication nor forms nor user
+    input whatsoever it should be bullet-proof, I will do my research about security best practices to ensure as much as
+    possible that it cannot be hacked.
+
+    04-11-2024
+    Next step is deploying my website from GitHub, to do which I'll need to install GitBash on my Windows 11 OS, since
+    Windows has no GitBash pre-installed. Although it is widespread practice to web-dev via VS Code, I am using PyCharm
+    since this can be done by simply emulating the terminal. This is to stick to my main principle, i.e., "keeping it
+    as simple as possible".
+    I am reviewing how to install GitBash and deploy via GitHub thanks to Udemy's course by Dr. Angela Yu. I foresee
+    that I shall create a Git Repository containing the necessary code of my website, whereas sensible information shall
+    be stored in the server's environment, such as Heroku's, to be kept as private as possible.
+    I will gitignore my .venv folder and the .idea folder that is created by PyCharm (type ls -a in GitBash to see it).
+    (see also https://www.reddit.com/r/pycharm/comments/ogx5e9/poll_gitignore_the_idea_folder_yes_or_no/).
+    I am pushing this git local repository to my public repo https://github.com/zmsknlzq/portfolio.git from terminal,
+    by using the following commands after committing the files:
+    git remote add origin https://github.com/zmsknlzq/portfolio.git
+    git push -u origin master
+    It occurred to me that I might somehow take note of the required packages in my GitHub repo, but submitting the
+    entire .venv seems risky and unnecessary. Therefore, as per https://stackoverflow.com/a/6590783/12002711, I am
+    using the pip freeze command to generate an output of required modules that I will copy into a requirements.txt file
+    (see https://pip.pypa.io/en/stable/reference/requirements-file-format/#requirements-file-format).
+    The pip freeze command listed the following:
+    blinker==1.8.2
+    click==8.1.7
+    colorama==0.4.6
+    Flask==3.0.3
+    itsdangerous==2.2.0
+    Jinja2==3.1.4
+    MarkupSafe==3.0.2
+    Werkzeug==3.0.6
+    I am copying these lines into a requirements.txt to be pushed to GitHub instead of the .venv folder.
+    NB: requirements.txt must be kept up-to-date, which means any newly added modules must be added!
+    As per Dr Yu's tutorial, I am copying git team's prebuilt gitignore file for Python from
+    https://github.com/github/gitignore/blob/main/Python.gitignore
+    This is overkill for this particular project, but good to know for the future.
+
+    05-11-2024
+    A security scan by GitHub on my code informed me that it is dangerous to run Flask in debug mode:
+    "A Flask app appears to be run in debug mode. This may allow an attacker to run arbitrary code through the debugger."
+    Therefore, I am setting debug to false, since I have already completed development.
+
+    06-11-2024
+    Following Dr Yu's deployment tutorial, I am using gunicorn as an WSGI server:
+    "There are many WSGIs to choose from, but we'll use the most popular - gunicorn.
+    That way our hosting provider will call gunicorn to run our code" (from Lecture 504).
+    Since the gunicorn module needs to be imported, requirements.txt needs updating.
+    gunicorn's latest stable version as per https://gunicorn.org/ is 22.0.0; therefore, I am adding the following line
+    of text to my requirements.txt: gunicorn==22.0.0
+    "Next, we need to tell our hosting provider about our gunicorn server, what our app is called, and how to run our
+    Flask app. We do that using a config file called a Procfile".
+    Therefore, I create such a Procfile.
+    The tutorial specifies to insert the following line of code into Procfile:
+    web: gunicorn main:app
+    "This will tell our hosting provider to create a web worker that is able to receive HTTP requests. The Procfile also
+    says to use gunicorn to serve your web app. And finally it specifies the Flask app object is the main.py file.
+    That way the hosting provider knows about the entry point for the app and what our app is called".
+    However, since my main file is called server.py, I am trying to use the following line instead:
+    web: gunicorn server:app
+    As a server hosting provider, since the famous Heroku is now infamous due to the cancellation of their free plans,
+    I am going with another service as suggested by the tutorial.
+    Build and deployment succeeded. I registered my domain name drgiovannini.com at Cloudflare.
+    I bought the domain and mapped the CNAME to the original render's domain, both with and without the www prefix.
+    After issuing the certificate via render.com, I reset my domain records to proxied to automatically enable
+    Cloudflare's Universal SSL protection, which should be activated within the next 24 hours.
+
