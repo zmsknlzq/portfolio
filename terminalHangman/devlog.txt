@@ -1,0 +1,147 @@
+06-11-2024
+A simple hangman game to show how to PARSE command-line arguments in a Python program.
+
+First we need a dictionary of words in the language we want to make the game for, in this case English.
+As this readme here (https://github.com/dwyl/english-words?tab=readme-ov-file#list-of-english-words) says,
+it is convenient to have all the words in a txt file divided by newlines, as it makes for easy import into any app.
+
+I am therefore saving the list from https://github.com/dwyl/english-words into an en_words.txt file
+First things first, let's verify that we can select random words from the file. (see hangman.py)
+Printing random.choice(words) showed "misanthropically", which is perfect.
+
+Now, the only two kinds of input that we need to play this game from command line or terminal are arguments to set
+the difficulty, i.e., the minimum and maximum numbers of letters that a word must be long
+(let's say the minimum length must be at least 6, the maximum must be at most 18)
+to cherry-pick only words with the given length from our list.
+We may, however, also display a helper if the user enters something like "python hangman.py --help", which would show
+something like:
+--------------------------------------------------------------------------------
+usage: hangman.py [-h] [-m] [-M] [-r] [-H]
+
+Terminal Hangman - (c) 2024 Stefano Giovannini
+
+options:
+  -h, --help  	(this is included in argparse)
+  -m, --min  	set min word length (at least 6)
+  -M, --max  	set max word length (at most 18)
+  -H, --high    show high-score
+--------------------------------------------------------------------------------
+
+NB: it is likely that the command to launch Python is python3 (instead of python) on some OSs.
+
+07-11-2024
+For reference, I used https://www.kdnuggets.com/build-a-command-line-app-with-python-in-7-easy-steps, which builds
+a "to-do list" app. For the details of the add_argument method, see
+https://docs.python.org/3/library/argparse.html#the-add-argument-method
+
+To parse the command-line arguments, a parser is needed. argparse allows to initialize a parser object by calling
+argparse.ArgumentParser(). For details on the ArgumentParser class, see
+https://docs.python.org/3/library/argparse.html#argumentparser-objects
+What I need to know here is simply that "ArgumentParser objects associate command-line arguments with actions" and
+that the default action is "store", which simply saves the argument to memory, in practice importing it from
+terminal to Python.
+
+By looking at the docs, we learn that the ArgumentParser class can take several keyword arguments; amongst those, I
+intend to specify description="Terminal Hangman - (c) 2024 Stefano Giovannini". Note that the help method is active by
+default and mapped to the flag/name -h and --help. It should be also kept in mind that abbreviation of optional args
+flags/names are allowed by default if unambiguous.
+
+The next step is thus to define a function to return our customized parser. (see parser.py)
+The program defaults to 6 letters minimum and 18 letters maximum for word, which the user can change by inputting
+the optional arguments -m, --min and -M, --max
+
+Once the parser is created, the parse_args method converts "argument strings to objects and assign them as attributes of
+the namespace. Return the populated namespace. Previous calls to add_argument() determine exactly what objects are
+created and how they are assigned. [...] args - List of strings to parse. The default is taken from sys.argv".
+(https://docs.python.org/3/library/argparse.html#the-parse-args-method)
+
+NB: to access the args from their namespace, which I called "args" for clarity in my hangman.py module, you need to
+specify their name as an attribute of the namespace, the name abbreviation is not mapped and will give an error, even if
+you passed the argument via abbreviation. E.g., to access the value of the -m arg parsed from terminal command
+"python abs_path/hangman.py -m 9", you need to call args.min
+
+I then need a txt file to store the high score, which I plan to compute taking into account two factors:
+the number of errors, and the difficulty of the word.
+The difficulty of the word is in turn the resulting of two
+components, i.e., its length and the number of singular letters it is composed of.
+So, for example:
+the word to be guessed is "misanthropically".
+Word difficulty = word length * number of singular letters = 16 * 13 = 208
+Then, if there were any errors, I would decrease the score by multiplying it for the sum of the percentage equal to
+the length of the word per error. Let's assume the user made three errors, the penalty would amount to 3*16, and the
+total score would be 208 - 48. The rationale is that longer words allow for higher scores while being more penalised.
+See score.py for this score_calculator function and the high_score function, which updates the high score if needed.
+
+Copyright of the hangman picture shown upon losing is Chris Horton's:
+https://gist.github.com/chrishorton/8510732aa9a80a03c829b09f12e20d9c
+
+08-11-2024
+I implemented the show_high_score function to show high score when the arg -H, --high is passed. It is important that
+in this case I had to change the default value of the action parameter of the add_argument method to 'store_true'
+(default is 'store'), to tell argparse that that arg does not take user specified values.
+
+The victory ASCII art is from: https://ascii.co.uk/art/running
+
+I decided to add an arg to set the difficulty level to easy, medium, or hard. The corresponding arg is -d, --difficulty
+and it can take one of the three values 1, 2, or 3, respectively meaning easy, medium, and hard.
+The default difficulty is set to 'medium', i.e., the player lives (max num of rounds before game-over) equals 150% of
+the number of singular letters (SLs) in that word (rounded to nearest int).
+E.g., if the word is "misanthropically", which contains 13 different letters, the number of rounds to guess the words
+will be set to 19 at most.
+If the difficulty is set to 'easy', lives equal 200% of the word's SLs; if it is set to 'hard', it equals SLs.
+The function that regulates this is defined and explained in the difficulty.py module.
+
+Now that the program works, I will translate it into an executable file for distribution with PyInstaller
+(see https://pyinstaller.org/en/stable/).
+
+I realised that hard-coding the absolute path in .env and calling it from modules may not be a good idea, because when
+distributing the executable it would cause an error due to the difference of path with the destination machine.
+Thereofore, as an alternative solution, I will get the absolute path by using Python's 'os' module. Precisely,
+I am using os.path.dirname(os.path.realpath(__file__)) as described here:
+https://sentry.io/answers/find-the-current-directory-and-executed-file-s-directory-in-python/#the-solution
+NB: this doesn't automatically add '\\' at the end of the string, the statement must be:
+abs_path = os.path.dirname(os.path.realpath(__file__)) + '\\'
+
+PyInstaller is compatible with the main OS, and can create graphical user interfaces in the form of windows, so that the
+user doesn't need to be able to use the terminal. I will be following PyInstaller Quickstart:
+https://pyinstaller.org/en/stable/#quickstart
+The executable is created in a new 'dist' folder.
+Interestingly, or rather should I say, 'oddly', PyCharm labels my hangman.exe file with a question mark, i.e., it
+doesn't recognize the '.exe' extension! I thus need to add it to the Registered Patterns in the File Types section of
+Editor in Settings. Obviously I am not messing with the binary in PyCharm, but it is nicer to see the file extension
+recognized.
+As I feared, the Quickstart lets out how to deal with non-Python files that your program needs, such as .txt files.
+As a result, the executable that I created does not include the necessary 'words_alpha.txt' file.
+Delving into the documentation, one reads:
+"If your program depends on access to certain data files, you can tell PyInstaller to include them in the bundle as
+well. You do this by modifying the spec file, an advanced topic that is covered under Using Spec Files."
+(quote from https://pyinstaller.org/en/stable/operating-mode.html#analysis-finding-the-files-your-program-needs)
+
+Tangentially, it occurred to me that it is possible to download the words_alpha.txt file from its repository upon
+first launch of the program. However, I don't want to make such a simple game Internet-dependent in any of its parts.
+Therefore, I will stick with the solution that adds the .txt file to the bundled distribution files. I.e., I will do as
+instructed at https://pyinstaller.org/en/stable/spec-files.html#adding-data-files
+I am thus trying to change the command
+pyinstaller hangman.py
+that I used the first time with the following:
+pyinstaller --add-data "words_alpha.txt:." hangman.py
+
+Now, as desired, the words_alpha.txt file is listed in the 'dist/hangman/_internal' folder's files.
+I retry launching the .exe by double-clicking. It works, although launching it like this makes it impossible to
+customize it or even access the help, because the terminal is bypassed, which means that no arguments can be given.
+Therefore, I will add some inputs to substitute the args in case the game is launched by double-clicking instead of
+command-line or terminal.
+Now I try to launch it from a terminal outside PyCharm's virtual environment to confirm it can be customized in that
+way. It works!
+
+09-11-2024
+I recreate the file after adding the input for customisation in case it is launched by double click.
+All seems to work nicely, so I am rebuilding the executable.
+I will push all this stuff to my public portfolio repo on GitHub, including the dist/hangman/ folder to show that
+the executable works.
+Therefore, I am removing the rule to ignore dist/ from my .gitignore
+I also need to remove the letter 'd' from this rule: *.py[cod], otherwise .pyd files (a kind of .dll) will be ignored.
+I am also moving my .gitignore into cmd_lin_hangman/terminalHangman/, otherwise it would be pushed outside
+terminalHangman to the GH repo.
+The title's ASCII art was generated by the website https://ascii-generator.site/t/.
+
