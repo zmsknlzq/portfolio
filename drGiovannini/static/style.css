@@ -1,0 +1,284 @@
+html {
+  background-color: black;
+  color: #fdee00;
+  scroll-behavior: smooth;
+  text-align: center;
+}
+
+* {
+    background-color: black;
+    /* next lines disable text selection */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+a {
+ text-decoration: none;
+ color: #fdee00;
+}
+
+a:hover {
+  font-weight: 600;
+  border-bottom: solid #981515;
+}
+
+div {
+  max-width: 100%;
+  margin: auto;
+  display: inline-block;
+}
+
+h1 {
+  margin-top: 7.5vh;
+  margin-bottom: 0;
+}
+
+p {
+  display: inline-block;
+  text-align: justify;
+}
+
+ul {
+  list-style-type: none;
+}
+
+#route_error{
+  left: 32.5vw;
+  max-width: 50vw;
+  position: fixed;
+  top: 22.5vh;
+}
+
+#avatar {
+  border-radius: 50%;
+  float: left;
+  max-width: 15vw;
+  position: fixed;
+  z-index: 888; /* prevent going under #viewer */
+}
+
+#copyright {
+  margin-top: 0;
+}
+
+#email {
+  left: 35vw;
+  max-width: 50vw;
+  position: fixed;
+  top: 25vh;
+}
+
+#main_div {
+  width: 70vw;
+  margin: auto;
+}
+
+#top_nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 999;
+}
+
+#video_embedder{
+    position: fixed;
+    width: 25vw; /* same unit of measure to keep proportions */
+    height: 14.0625vw; /* same unit of measure to keep proportions */
+    top: 55vh;
+    left: 10vw;
+    display: inline-block;
+}
+
+#viewer{
+  background-color: black;
+  height: 75vw;
+  width: 50vw;
+  display: inline-block;
+  overflow: auto;
+  padding: 2rem 2rem 2rem 0;
+  position: fixed;
+}
+
+.auto_overflow{
+  overflow: auto;
+}
+
+.bordered {
+  border: solid .1rem;
+}
+
+.boxed_sexy{
+  border: .1rem solid #981515;
+}
+
+.boxed_sexy_left_down_right{
+  border-left: .1rem solid #981515;
+  border-bottom: .1rem solid #981515;
+  border-right: .1rem solid #981515;
+}
+
+.boxed_sexy_left_up_right{
+  border-left: .1rem solid #981515;
+  border-top: .1rem solid #981515;
+  border-right: .1rem solid #981515;
+}
+
+.forging-heat{
+  color: #fff1a8;
+}
+
+/* routes' #avatar's positioning */
+
+.from_left_and_top_bio { /* use this to position fixed avatar based on /bio route's content */
+   left: 20vw;
+   top: 25vh;
+}
+
+.from_left_and_top_email { /* use this to position fixed avatar based on /email route's content */
+   left: 10vw;
+   top: 25vh;
+}
+
+.from_left_and_top_generic { /* use this to position fixed avatar based on any unspecified route's content */
+   left: 10vw;
+   top: 25vh;
+}
+
+.from_left_and_top_pedone { /* use this to position fixed avatar based on /pedone route's content */
+   left: 20vw;
+   top: 20vh;
+}
+
+.from_left_and_top_services { /* use this to position fixed avatar based on /services route's content */
+   left: 27vw;
+   top: 25vh;
+}
+
+.from_left_and_top_welcome { /* use this to position fixed avatar based on /welcome route's content */
+   left: 20vw;
+   top: 25vh;
+}
+
+/* routes' #viewer's positioning ("_v" at class name's end means "for the #viewer element") */
+
+.from_left_and_top_bio_v { /* use this to position fixed #viewer based on /bio route's content */
+   left: 40vw;
+   top: 20vh;
+}
+
+.from_left_and_top_email_v { /* use this to position fixed #viewer based on /email route's content */
+   left: 40vw;
+   top: 20vh;
+}
+
+.from_left_and_top_generic_v { /* use this to position fixed #viewer based on any generic route's content */
+   left: 40vw;
+   top: 20vh;
+}
+
+.from_left_and_top_pedone_v { /* use this to position fixed #viewer based on /pedone route's content */
+   left: 40vw;
+   top: 20vh;
+}
+
+.from_left_and_top_services_v { /* use this to position fixed #viewer based on /services route's content */
+   left: 25vw;
+   top: 20vh;
+}
+
+.from_left_and_top_welcome_v { /* use this to position fixed #viewer based on /welcome route's content */
+   left: 30vw;
+   top: 20vh;
+}
+
+.inline-block{
+  display: inline-block;
+}
+
+.larger-font{
+  font-size: 1.2rem;
+}
+
+.line_height_15 {
+  line-height: 1.5;
+}
+
+.line_height_double {
+  line-height: 2;
+}
+
+.lugrasimo-regular {
+  font-family: "Lugrasimo", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.nav_li {
+  display: inline-block;
+  margin: auto 2rem;
+}
+
+.no_margin {
+  margin: 0;
+}
+
+.no_padding {
+  padding: 0;
+}
+
+.quintessential-regular {
+  font-family: "Quintessential", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.red-rose-light {
+  font-family: "Red Rose", serif;
+  font-optical-sizing: auto;
+  font-weight: 300; /* max 700 */
+  font-style: normal;
+}
+
+.red-rose {
+  font-family: "Red Rose", serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* max 700 */
+  font-style: normal;
+}
+
+.red-rose-thick {
+  font-family: "Red Rose", serif;
+  font-optical-sizing: auto;
+  font-weight: 500; /* max 700 */
+  font-style: normal;
+}
+
+.red-rose-thicker {
+  font-family: "Red Rose", serif;
+  font-optical-sizing: auto;
+  font-weight: 600; /* max 700 */
+  font-style: normal;
+}
+
+.red-rose-heavy {
+  font-family: "Red Rose", serif;
+  font-optical-sizing: auto;
+  font-weight: 700; /* max 700 */
+  font-style: normal;
+}
+
+.sexy {
+  color: #981515;
+}
+
+.small_padding {
+  padding: 1rem;
+}
+
+.width30pc {
+  width: 30%;
+}

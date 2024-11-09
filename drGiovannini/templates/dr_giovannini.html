@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" oncontextmenu="return false;"> <!--Disable right-click-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dr Stefano Giovannini</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lugrasimo&family=Quintessential&family=Red+Rose:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/static/site.webmanifest">
+</head>
+<body>
+    <nav id="top_nav">
+        <ul>
+            <li class="nav_li lugrasimo-regular"><a href="/">Home</a></li>
+            <li class="nav_li lugrasimo-regular"><a href="/bio">Bio</a></li>
+            <li class="nav_li lugrasimo-regular"><a href="/services">Services</a></li>
+            <li class="nav_li lugrasimo-regular"><a href="/email">Email</a></li>
+            <li class="nav_li lugrasimo-regular"><a href="/pedone">Pedone Art</a></li>
+            <li class="nav_li lugrasimo-regular">
+                <a href="https://www.linkedin.com/in/stefanogiovannini/" target="_blank" rel="noreferrer">
+                    LinkedIn
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <h1 class="quintessential-regular">Dr Stefano Giovannini</h1>
+    <div id="main_div">
+            {% block avatar %}{% endblock %}
+            {% block content %}{% endblock %}
+    </div>
+    <h4 id="copyright" class="lugrasimo-regular">© {{current_year}} Stefano Giovannini
+        &nbsp&nbsp&nbsp(&nbspItalian VAT number <span class="red-rose">13359230961</span>&nbsp)
+    </h4>
+</body>
+</html>
