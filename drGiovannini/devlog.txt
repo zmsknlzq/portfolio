@@ -383,3 +383,8 @@ according to which, the next steps will be:
     After issuing the certificate via render.com, I reset my domain records to proxied to automatically enable
     Cloudflare's Universal SSL protection, which should be activated within the next 24 hours.
 
+    18-11-2024
+    SEOing my website: stage 1 SITEMAP
+    Added robots.txt and sitemap.xml to the static folder.
+    Routing following https://stackoverflow.com/a/14054039/12002711
+
