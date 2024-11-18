@@ -388,4 +388,14 @@ according to which, the next steps will be:
     Added robots.txt and sitemap.xml to the static folder.
     Routing following https://stackoverflow.com/a/14054039/12002711
 
+    SEOing my website: stage 2 PAGE TITLES
+    I will modify templating to add a different title per page. This should be as simple as inserting
+    {{page_title}} in the dr_giovannini.html <title></title> in <head></head> and then passing the variable
+    to each route from server.py, just as I did for the current_year variable.
 
+    (I also try to ignore the SO answer above and implement routing as such:
+        elif route_name.lower() == 'sitemap':
+            return 'sitemap.xml'
+        elif route_name.lower() == 'robots':
+            return 'robots.txt'
+    )
