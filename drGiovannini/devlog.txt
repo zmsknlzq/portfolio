@@ -400,3 +400,6 @@ according to which, the next steps will be:
             return 'robots.txt'
     ) ---> this doesn't work, I need to stick to the SO answer above
     ----> so I first try to comment out the two elif blocks in brackets, and keep the SO answer's code only
+
+    OK, everything's working.
+    Next, I will add <meta name="description" content={{meta_description}}> to each route.
