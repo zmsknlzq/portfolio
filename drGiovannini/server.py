@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import Flask, render_template, request, send_from_directory
 
-app = Flask(__name__, static_folder='static', static_url_path='/')
+app = Flask(__name__, static_folder='static')
 
 current_year = datetime.now().year
 
