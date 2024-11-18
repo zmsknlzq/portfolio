@@ -388,3 +388,4 @@ according to which, the next steps will be:
     Added robots.txt and sitemap.xml to the static folder.
     Routing following https://stackoverflow.com/a/14054039/12002711
 
+
