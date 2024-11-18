@@ -398,4 +398,5 @@ according to which, the next steps will be:
             return 'sitemap.xml'
         elif route_name.lower() == 'robots':
             return 'robots.txt'
-    )
+    ) ---> this doesn't work, I need to stick to the SO answer above
+    ----> so I first try to comment out the two elif blocks in brackets, and keep the SO answer's code only

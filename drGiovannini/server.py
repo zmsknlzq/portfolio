@@ -39,16 +39,20 @@ def home(route_name=None):
             current_year=current_year,
             page_title='Dr Stefano Giovannini\'s services'
         )
-    elif route_name.lower() == 'sitemap':
-        return 'sitemap.xml'
-    elif route_name.lower() == 'robots':
-        return 'robots.txt'
+    # elif route_name.lower() == 'sitemap':
+    #     return 'sitemap.xml'
+    # elif route_name.lower() == 'robots':
+    #     return 'robots.txt'
     else:
         return render_template(
             template_name_or_list='404.html',
             current_year=current_year,
             page_title='Dr Stefano Giovannini - 404'
         )
+@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 if __name__ == '__main__':
     app.run(debug=False) # set to True in development, False when publishing on remote repositories and in production
