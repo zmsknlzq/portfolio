@@ -403,3 +403,16 @@ according to which, the next steps will be:
 
     OK, everything's working.
     Next, I will add <meta name="description" content={{meta_description}}> to each route.
+
+    19-11-2024
+    Interestingly, the last line from yesterday's notes had to be modified as
+    <meta name="description" content="{{meta_description}}"> to work properly, although meta_description is a string.
+
+    Next, I might consider adding high-quality images to embellish my website while attracting more traffic, as per
+    https://developers.google.com/search/docs/fundamentals/seo-starter-guide#add-images-near-text
+
+    However, it may be more urgent to implement a Chinese-language version of each page of the website. To do so,
+    considering the explanation at
+    https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites,
+    I will implement a drgiovannini.cn website targeted to the Chinese audience. Each page in drgiovannini.com will
+    contain a link to its Chinese equivalent.
