@@ -61,9 +61,9 @@ ul {
   z-index: 888; /* prevent going under #viewer */
 }
 
-#copyright {
+/*#copyright {
   margin-top: 0;
-}
+}*/
 
 #email {
   left: 35vw;

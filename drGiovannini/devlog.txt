@@ -57,7 +57,7 @@ according to which, the next steps will be:
     related cmd line commands because PyCharm automatically lets me create a venv for a new project, and also it is not
     necessary to use the terminal for installing packages via pip, since they can be added in many cases by simply
     clicking on the red line when importing, or anyway by adding them to the Python interpreter from settings, both of
-    which are easier then using the terminal.
+    which are easier than using the terminal.
 
 2) QUICKSTART
 
@@ -88,7 +88,7 @@ according to which, the next steps will be:
                 return modifier
             decorate = decorator(function_to_decorate)
             decorate()
-        Of course, the last two lines can be reduced to one as decorator(function_to_decorate)() if no storage is needed.
+        If no storage is needed, the last two lines can be reduced to one as decorator(function_to_decorate)().
         However, Python offers a shorter way to express the same meaning, as it is possible to implement decoration by
         leveraging the special character @. The way you use this is by prefixing it to the name of the decorator one line
         above the function to be decorated. The decoration is permanent from that line on. The above example would become:
