@@ -64,8 +64,8 @@ ul {
 #copyright {
   position: fixed;
   z-index: 999;
-  margin: auto;
-  width: 50%;
+  width: 25%;
+  left: 50%
 }
 
 #email {
